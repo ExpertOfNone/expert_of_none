@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+
+{% block content %}
+  <div class="container">
+    {% for entry in entries %}
+      {{ entry.title }}
+    {% empty %}
+      No entries.
+    {% endfor %}
+  </div>
+{% endblock content %}

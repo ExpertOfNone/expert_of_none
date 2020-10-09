@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    {% block title %}
+      {% if page_title %}
+        {{ page_title }}
+      {% else %}
+        Expert of None
+      {% endif %}
+    {% endblock %}
+  </title>
+
+  <link rel="icon" href="{% static 'base/img/logo.svg' %}">
+
+  {% block sytles %}
+    <link rel="stylesheet" href="{% static 'base/css/bootstrap.min.css' %}" >
+    <link rel="stylesheet" href="{% static 'base/css/base.css' %}">
+  {% endblock sytles %}
+
+</head>
+<body>
+
+{% include 'base/snippets/nav-bar.html' %}
+
+{% block body_title %}
+  <h1 class="container-xl">
+      {% if page_title %}
+        {{ page_title }}
+      {% else %}
+        Expert of None
+      {% endif %}
+  </h1>
+{% endblock body_title %}
+{# TODO Add Messages Container #}
+
+{% block content %}
+{% endblock content %}
+
+
+{% block footer %}
+{% endblock footer %}
+
+{% block scripts %}
+  <script type="application/javascript" src="{% static 'base/js/jquery-3.5.1.min.js' %}"></script>
+  <script src="{% static 'base/js/popper.min.js' %}"></script>
+  <script type="application/javascript" src="{% static 'base/js/bootstrap.min.js' %}"></script>
+{% endblock scripts%}
+</body>
+</html>
