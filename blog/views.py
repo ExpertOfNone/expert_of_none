@@ -1,5 +1,6 @@
 from django.views.generic import ListView
-from .models import Blog
+
+from blog.models import Blog
 
 
 class HomeView(ListView):

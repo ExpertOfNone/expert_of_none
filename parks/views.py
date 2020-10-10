@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django.views.generic import DetailView
 
-# TODO Add Park Detail Page
+
+class ParkDetailView(DetailView):
+
+    template_name = 'parks/details.html'
+    context_object_name = 'park'
+
+
+

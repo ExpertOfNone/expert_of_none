@@ -1,5 +1,5 @@
 from django.db import models
-from base.models import EONBaseModel, Topic
+from base.models import EONBaseModel
 
 
 class BlogManager(models.Manager):
@@ -13,7 +13,7 @@ class Blog(EONBaseModel):
 
     title = models.CharField(max_length=100)
     content = models.TextField()
-    topics = models.ManyToManyField(Topic, related_name='blogs')
+    topics = models.ManyToManyField('base.Topic', related_name='blogs')
     date = models.DateField()
     published = models.BooleanField(default=False) # TODO Choices Yes No
 

@@ -28,7 +28,7 @@ class Park(EONBaseModel):
         (PARK_TYPE_STATE, 'State'),
         (PARK_TYPE_NATIONAL, 'National'),
         (PARK_TYPE_CITY, 'City'),
-        (PARK_TYPE_OTHER, 'Other')
+        (PARK_TYPE_OTHER, 'Other'),
     )
 
     park_type = models.CharField(max_length=20, choices=PARK_TYPE_CHOICES)
@@ -44,7 +44,7 @@ class Park(EONBaseModel):
     country = CountryField()
     postal_code = models.CharField(blank=True, null=True, max_length=20)
 
-    amenities = models.ManyToManyField(Amenity, through='ParkAmenity')
+    amenities = models.ManyToManyField('Amenity', through='ParkAmenity')
 
     topic = models.ForeignKey('base.Topic', on_delete=models.SET_NULL, null=True)
 
@@ -57,15 +57,25 @@ class Park(EONBaseModel):
 
 class ParkAmenity(EONBaseModel):
 
-    park = models.ForeignKey(Park, on_delete=models.CASCADE)
-    amenity = models.ForeignKey(Amenity, on_delete=models.CASCADE)
+    park = models.ForeignKey('Park', on_delete=models.CASCADE)
+    amenity = models.ForeignKey('Amenity', on_delete=models.CASCADE)
     additional_info = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Park Amenities'
+
+    def __str__(self):
+        return '{park_name} - {amenity}'.format(
+            park_name=self.park.name,
+            amenity=self.amenity.name,
+        )
 
 
 class ParkPhoto(EONBaseModel):
+    """Photos taken of parks. Pass through model for Parks and Photos."""
 
     photo = models.ForeignKey('base.Photo', on_delete=models.CASCADE, related_name='park_photos')
-    park = models.ForeignKey(Park, on_delete=models.DO_NOTHING, related_name='park_photos')
+    park = models.ForeignKey('Park', on_delete=models.DO_NOTHING, related_name='park_photos')
 
     def __str__(self):
         return '{park_name} - Photo:{photo_name}'.format(
