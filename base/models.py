@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -25,7 +26,7 @@ class EONBaseModel(models.Model):
 class Topic(EONBaseModel):
     """Areas of content for Blogs, utilized for sorting"""
 
-    name = models.CharField(max_length=50,)
+    name = models.CharField(max_length=50)
     code = models.CharField(max_length=5)
     description = models.TextField(null=True)
     parent_topic = models.ForeignKey('self', blank=True, on_delete=models.SET_NULL, null=True)
@@ -51,9 +52,9 @@ class Topic(EONBaseModel):
             })
 
 
-class Photo(models.Model):
+class Photo(EONBaseModel):
 
-    photo = models.ImageField()
+    photo = models.ImageField(storage=FileSystemStorage(location='files/photos'), )
     name = models.CharField(max_length=50)
     description = models.TextField(
         blank=False,

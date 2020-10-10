@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from base.models import Topic
+from base.models import Topic, Photo
 
 
 class EONBaseAdmin(admin.ModelAdmin):
@@ -31,4 +31,10 @@ class TopicAdmin(EONBaseAdmin):
     ]
 
 
+class PhotoAdmin(EONBaseAdmin):
+
+    pass
+
+
 admin.site.register(Topic, TopicAdmin)
+admin.site.register(Photo, PhotoAdmin)

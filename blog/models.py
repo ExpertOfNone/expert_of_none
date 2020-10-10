@@ -21,7 +21,7 @@ class Blog(EONBaseModel):
 
     class Meta:
         ordering = ['date']
-        unique_together = 'title', 'date', 'topics'
+        unique_together = 'title', 'date'
 
     def __str__(self):
         return '{date} - {title}; Published: {published}'.format(
