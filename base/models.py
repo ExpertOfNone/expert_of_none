@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.core.files.storage import FileSystemStorage
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 user_model = get_user_model()
@@ -23,11 +26,17 @@ class EONBaseModel(models.Model):
 class Topic(EONBaseModel):
     """Areas of content for Blogs, utilized for sorting"""
 
-    name = models.CharField(max_length=50,)
+    name = models.CharField(max_length=50)
     code = models.CharField(max_length=5)
     description = models.TextField(null=True)
     parent_topic = models.ForeignKey('self', blank=True, on_delete=models.SET_NULL, null=True)
-    top_level = models.BooleanField(default=False, choices=((False, 'No'), (True, 'Yes')))  # TODO is there a Django Yes No
+    top_level = models.BooleanField(
+        default=False,
+        choices=(
+            (False, 'No'),
+            (True, 'Yes')
+        )
+     )
 
     class Meta:
         ordering = ['name']
@@ -36,6 +45,23 @@ class Topic(EONBaseModel):
     def __str__(self):
         return self.name
 
-    # TODO add clean method that doesnt allow a parent topic when top level is selected
+    def clean(self):
+        if self.top_level and self.parent_topic:
+            raise ValidationError({
+                'top_level': _('Top Level cannot have a Parent Topic')
+            })
 
 
+class Photo(EONBaseModel):
+
+    photo = models.ImageField(storage=FileSystemStorage(location='files/photos'), )
+    name = models.CharField(max_length=50)
+    description = models.TextField(
+        blank=False,
+        help_text="Required and will be used as description and alt-text for Images"
+    )
+
+    def __str__(self):
+        return self.photo.name
+
+    # TODO Make Photo Name Match Name Entered In The Clean

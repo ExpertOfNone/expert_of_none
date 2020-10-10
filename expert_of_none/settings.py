@@ -19,15 +19,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# TODO Add Media URL and Media Root
+
 ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,7 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base',
     'blog',
+    'parks',
 ]
+
+COUNTRIES_FIRST = ('US',)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,11 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'expert_of_none.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-
+MEDIA_ROOT = ''
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 

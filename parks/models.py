@@ -1,8 +1,8 @@
 from django.db import models
-from base.models import EONBaseModel
+from django_countries.fields import CountryField
+from localflavor.us.models import USStateField
 
-# TODO Add Django Local Flavor
-# TODO Add Django Countries - Use according to instructions (settings) not your hack
+from base.models import EONBaseModel
 
 
 class Amenity(EONBaseModel):
@@ -18,6 +18,7 @@ class Amenity(EONBaseModel):
 
 
 class Park(EONBaseModel):
+    """General Park Information Utilized for Reference"""
 
     PARK_TYPE_STATE = 'state'
     PARK_TYPE_NATIONAL = 'national'
@@ -33,22 +34,28 @@ class Park(EONBaseModel):
     park_type = models.CharField(max_length=20, choices=PARK_TYPE_CHOICES)
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
+    photos = models.ManyToManyField('base.Photo', through='ParkPhoto')
 
     address_one = models.CharField(max_length=50)
     address_two = models.CharField(max_length=50, null=True, blank=True)
 
     city = models.CharField(max_length=50)
-    # State - optional
-    # Country
-    # Postal Code - Set up for International, not required
-    # international phone number field
+    state = USStateField(blank=True, null=True)
+    country = CountryField()
+    postal_code = models.CharField(blank=True, null=True, max_length=20)
 
     amenities = models.ManyToManyField(Amenity, through='ParkAmenity')
 
     topic = models.ForeignKey('base.Topic', on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return '{name} - {park_type}'.format(
+            name=self.name,
+            park_type=self.get_park_type_display(),
+        )
 
-class ParkAmenity(models.Model):
+
+class ParkAmenity(EONBaseModel):
 
     park = models.ForeignKey(Park, on_delete=models.CASCADE)
     amenity = models.ForeignKey(Amenity, on_delete=models.CASCADE)
@@ -57,17 +64,11 @@ class ParkAmenity(models.Model):
 
 class ParkPhoto(EONBaseModel):
 
-    photo = models.ImageField()
-    name = models.CharField(max_length=50)
-    description = models.TextField(
-        blank=False,
-        help_text="Required and will be used as description and alt-text for Images"
-    )
-
-    park = models.ForeignKey(Park, on_delete=models.DO_NOTHING, related_name='photos')
-
-    class Meta:
-        unique_together = 'park', 'name'
+    photo = models.ForeignKey('base.Photo', on_delete=models.CASCADE, related_name='park_photos')
+    park = models.ForeignKey(Park, on_delete=models.DO_NOTHING, related_name='park_photos')
 
     def __str__(self):
-        return '{park_name} - Photo:{photo_name}'.format(park_name=self.park.name, photo_name=self.name)
+        return '{park_name} - Photo:{photo_name}'.format(
+            park_name=self.park.name,
+            photo_name=self.photo.name,
+        )
