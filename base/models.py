@@ -60,3 +60,8 @@ class Photo(EONBaseModel):
         blank=False,
         help_text="Required and will be used as description and alt-text for Images"
     )
+
+    def __str__(self):
+        return self.photo.name
+
+    # TODO Make Photo Name Match Name Entered In The Clean

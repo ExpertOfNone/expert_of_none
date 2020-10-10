@@ -33,6 +33,8 @@ class TopicAdmin(EONBaseAdmin):
 
 class PhotoAdmin(EONBaseAdmin):
 
+    # TODO Add Proper List Display
+
     pass
 
 

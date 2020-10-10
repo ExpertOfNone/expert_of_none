@@ -3,6 +3,7 @@ from base.admin import EONBaseAdmin
 from parks.models import Park, ParkAmenity, ParkPhoto
 
 
+# TODO make Photo and Park Amenity Inline with Photo upload in the same page
 class ParkAdmin(EONBaseAdmin):
     pass
 
