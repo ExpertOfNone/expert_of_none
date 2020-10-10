@@ -33,6 +33,7 @@ class Park(EONBaseModel):
     park_type = models.CharField(max_length=20, choices=PARK_TYPE_CHOICES)
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
+    photos = models.ManyToManyField('base.Photo', through='ParkPhoto')
 
     address_one = models.CharField(max_length=50)
     address_two = models.CharField(max_length=50, null=True, blank=True)
@@ -57,17 +58,8 @@ class ParkAmenity(models.Model):
 
 class ParkPhoto(EONBaseModel):
 
-    photo = models.ImageField()
-    name = models.CharField(max_length=50)
-    description = models.TextField(
-        blank=False,
-        help_text="Required and will be used as description and alt-text for Images"
-    )
-
+    photo = models.ForeignKey('base.Photo', on_delete=models.CASCADE, related_name='park_photos')
     park = models.ForeignKey(Park, on_delete=models.DO_NOTHING, related_name='photos')
 
-    class Meta:
-        unique_together = 'park', 'name'
-
     def __str__(self):
-        return '{park_name} - Photo:{photo_name}'.format(park_name=self.park.name, photo_name=self.name)
+        return '{park_name} - Photo:{photo_name}'.format(park_name=self.park.name, photo_name=self.photo.name)
